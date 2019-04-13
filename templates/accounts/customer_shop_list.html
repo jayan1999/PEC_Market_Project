@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}<html>
+    <head>
+                <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+        <title>Welcome {{request.user.first_name}}</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="jumbotron">
+                <h1>Shops</h1>
+            </div>
+           <div class="row">
+               {% for shop in shops %}
+                <div class="col-md-4">
+                        <div class="card" style="width: 18rem;">
+                            <img style="width:200px; height:150px;" class="card-img-top" src="{{shop.display_picture.url}}" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title">{{shop.name}}</h5>
+                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                <br>
+                                <a href="/customer/shop/{{shop.pk}}/" class="btn btn-primary " style="text-align:center">Explore</a>
+                            </div>
+                        </div>                          
+                </div>
+               {% endfor %}
+           </div>
+        </div>
+    </body>
+</html>
+{% endblock %}

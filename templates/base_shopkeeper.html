@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Welcome {{request.user.username}}</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/animsition.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/animate.css' %}" rel="stylesheet">
+     <!--Custom styles for this template -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet"> </head>
+
+</head>
+<body class="home" data-gr-c-s-loaded="true">
+    <div class="site-wrapper animsition" data-animsition-in="fade-in" data-animsition-out="fade-out" style="animation-duration: 300ms; opacity: 1;">
+        
+        <!-- <header id="header" class="header-scroll top-header headrom animated headroom--top headroom--not-bottom"> -->
+                <!-- .navbar -->
+            
+                <nav class="navbar navbar-dark">
+                        <div class="container">
+                            <button class="navbar-toggler hidden-lg-up" type="button" data-toggle="collapse" data-target="#mainNavbarCollapse">☰</button>
+                            <a class="navbar-brand" href="/shopkeeper/dashboard"> <img class="img-rounded" src="{% static 'images/pml.png' %}" alt=""> </a>
+                            <div class="collapse navbar-toggleable-md  float-lg-right" id="mainNavbarCollapse">
+    
+                                <ul class="nav navbar-nav">
+                                        <li class="nav-item"> <a class="nav-link active" href="/shopkeeper/dashboard">Home <span class="sr-only">(current)</span></a> </li>
+                                        <li class="nav-item"> <a class="nav-link active" href="/shopkeeper/orders/{{user.shopkeeper.pk}}">Orders <span class="sr-only">(current)</span></a> </li>
+                                        
+                                        <li class="nav-item mr-3">
+                                            <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link active">
+                                            <i class="fas fa-sign-out-alt"></i> Logout
+                                            </a>
+                                            <form action="{% url 'logout' %}" method="POST" id="logout">
+                                                {% csrf_token %}
+                                                <input type="hidden">
+                                            </form>
+                                        </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </nav>
+                <!-- /.navbar -->
+            <!-- </header> -->
+
+    </div>
+  
+
+    {% block content %} {% endblock %}
+    
+    <footer id="footer_l">
+        <p>Made By Jayan & Bhavya, &copy; 2019</p>
+    </footer>
+    
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/tether.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/animsition.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-slider.min.js' %}"></script>
+    <!-- <script src="{% static './js/isotope.min.js' %}"></script> -->
+    <script src="{% static 'js/headroom.js' %}"></script>
+    <script src="{% static 'js/foodpicky.min.js' %}"></script>
+ 
+</body>
+</html>

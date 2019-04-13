@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block content %}<html>
+    <head>
+                <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+        <title>Welcome {{request.user.first_name}}</title>
+    </head>
+    <body>
+            <div class="container">
+
+                    <div class="jumbotron">
+                        <h1 class="display-4">{{shop.name}} !</h1>
+                        <hr class="my-4">
+                        <p class="lead">
+                                <table class="table " style="background: #FFEDE9;">
+                                        <thead>
+                                          <tr>
+                                            <th>Offers</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for offeritem in offers %}
+                                                <tr>
+                                                    <td>{{offeritem.offer}}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                </table>
+                        </p>
+                    </div>
+                </div>
+        
+        <div class="container">
+            <div class="jumbotron">
+                <h2 class="display-4">Add Items To Cart !</h2>
+                <hr class="my-4"> 
+                <p class="lead">
+                        <table class="table " style="background: #FFEDE9;">
+                                <thead>
+                                  <tr>
+                                    <th>Item</th>
+                                    <th>Price</th>
+                                    <th>Available</th>
+                                    <th>Action</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in inventory_items %}
+                                        <tr>
+                                            <td>{{item.item_name}}</td>
+                                            <td > ₹ <span id="price-{{item.pk}}">{{item.price}}</span></td>
+                                            <td><span id="availability-{{item.pk}}">{{item.availability}}</span></td>
+                                            <span style="display:none;" id="max_availability_{{item.pk}}">{{item.availability}}</span>
+                                            <td>
+                                                    <button class="btn btn-success" onclick="addToCart({{item.pk}});">
+                                                        +
+                                                    </button>
+                                                    
+                                                    <button class="btn btn-warning" onclick="removeFromCart({{item.pk}});" >
+                                                        -
+                                                    </button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                        </table>
+                        Total Amount: ₹<span id="total_amount">0</span>
+                            <br/>
+                        <a class="btn btn-primary" href="/customer/checkout/">Checkout</a>
+
+                </p>
+            </div>
+        </div>
+    </body>
+    <script>
+            total_amount = 0.0;
+            localStorage.setItem("total_amount", 0 );
+            localStorage.setItem("cart_items", JSON.stringify([0]));
+            localStorage.setItem("shop_id", "{{shop.id}}");
+           function addToCart(pk)
+            {
+                // get content
+                console.log(pk);
+                var availability_count = $('#availability-'+ pk).html();
+                if (availability_count <= 0)
+                {  
+                    return;
+                }
+                availability_count = parseInt(availability_count) - 1;
+                $('#availability-'+ pk).html(availability_count);
+                arr = JSON.parse(localStorage.getItem("cart_items"));
+                arr.push(parseInt(pk));
+                localStorage.setItem("cart_items", JSON.stringify(arr));
+                var price = parseInt($('#price-'+ pk).html());
+                total_amount += price;
+
+                $('#total_amount').html(total_amount);
+                localStorage.setItem("total_amount", total_amount );
+
+            }
+
+           function removeFromCart(pk)
+            {
+                
+                // get content
+                max_availability_count = parseInt($('#max_availability_'+ pk).html());
+
+                var availability_count = $('#availability-'+ pk).html();
+                availability_count = parseInt(availability_count) + 1;
+                
+                if (availability_count <= 0)
+                {  
+                    return;
+                }
+                if(availability_count > max_availability_count )
+                {
+                    return;
+                }
+                $('#availability-'+ pk).html(availability_count);
+                arr = JSON.parse(localStorage.getItem("cart_items"));
+                arr2 = [];
+                a = 0;
+                for( var i = 0; i < arr.length; i++){ 
+                    if ( arr[i] === parseInt(pk) && a == 0) {
+                        a=1;
+                      continue;
+                    }
+                    arr2.push(arr[i]);
+                 }                                  
+                localStorage.setItem("cart_items", JSON.stringify(arr2));
+                var price = parseInt($('#price-'+ pk).html());
+                total_amount -= price;
+                $('#total_amount').html(total_amount);                
+                localStorage.setItem("total_amount", total_amount );
+
+            }
+
+
+    </script>
+</html>
+{% endblock %}

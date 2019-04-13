@@ -1,0 +1,71 @@
+{% extends 'base_shopkeeper.html' %}
+
+{% block content %}
+<html>
+    <head>
+                <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+        <title>Welcome {{request.user.first_name}}</title>
+    </head>
+    <body>
+        <div class="container">
+
+            <div class="jumbotron">
+                <h1 class="display-4">Order ID:{{order.pk}} </h1>
+                <hr class="my-4">
+                <p class="lead">
+                        <table class="table " style="background: #FFEDE9;">
+                                <thead>
+                                  <tr>
+                                    <th>Item Id</th>
+                                    <th>Item Name</th>
+                                    <th>Quantity</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order_item in order_items %}
+                                        <tr>
+                                            <td>{{order_item.item.pk}}</td>
+                                            <td>{{order_item.item.item_name}}</td>
+                                            <td > {{order_item.quantity}}</td>
+                                        </tr>
+                                    {% endfor %}
+
+                                    
+                                </tbody>
+                        </table>
+                        <hr>
+                        <form action="confirm/" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="order_id" value="{{order.pk}}">
+                            <input type="hidden" name="shopkeeper_id" value="{{order.shop.shopkeeper.pk}}">
+                            <input type="submit" value="Confirm" class="submit submit-xl" style="background-color:#32CD32">
+                        </form>
+                        <form action="reject/" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="order_id" value="{{order.pk}}">
+                            <input type="hidden" name="shopkeeper_id" value="{{order.shop.shopkeeper.pk}}">
+                            <input type="submit" value="Reject" class="submit submit-lg" style="background-color:#E41A1A">
+                        </form>
+                        <form action="deliver/" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="order_id" value="{{order.pk}}">
+                            <input type="hidden" name="shopkeeper_id" value="{{order.shop.shopkeeper.pk}}">
+                            <input type="submit" value="Deliver" class="submit submit-lg" style="background-color:#2169B1">
+                        </form>
+
+
+                </p>
+            </div>
+        </div>
+    </body>
+</html>
+{% endblock %}

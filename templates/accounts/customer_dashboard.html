@@ -1,0 +1,32 @@
+<!-- <html> -->
+        {% extends 'base.html' %}
+        {% load static %}
+        {% block content %}
+    <head>
+                <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+        <title>Welcome {{request.user.first_name}}</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="jumbotron">
+                <h1 class="display-4">Hello, {{request.user.first_name}} !</h1>
+                <p class="lead">Explore Outlets, their offers and items. Place Order after paying and check your order confirmation status</p>
+                <hr class="my-4">
+                <p>Place your order now</p>
+                <p class="lead">
+                    <a class="btn btn-primary btn-lg" href="/customer/shops" role="button">Outlets</a>
+                    <a class="btn btn-primary btn-lg" href="/customer/status/{{user.customer.pk}}" role="button">Order Status</a>
+                </p>
+            </div>
+        </div>
+    </body>
+    {% endblock %}
+<!-- </html> -->
