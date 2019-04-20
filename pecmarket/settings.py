@@ -82,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'pecmarketdb',
         'USER': 'postgres',
-        'PASSWORD': 'Ikonk@r1999',
+        'PASSWORD': 'root',
         'HOST': 'localhost'
     }
 }

@@ -41,32 +41,41 @@
         
     </body>
     <script>
+
         $(document).ready(function(){
+
             $('#total_amount').html(localStorage.getItem('total_amount'));
-            a = "";
-            ar = JSON.parse(localStorage.getItem("cart_items"))
-            for(index in ar)
-            {
-               a +=  `<input style="display:none;" type="checkbox" name="cart_items" value="`+ar[index]+`">`
-            }
-            console.log(a)
 
 
             $.get('/customer/get_payment_qr_code/'+ localStorage.getItem("shop_id")+'/',
             function (data)
             {
                 console.log(data)
-
                 $('#qr_code').attr("src", data);
             }
             );
-            $('#submitbutton').click(function(e) {
-                e.preventDefault();
-                $('#form').append(a);
 
-                $('#form').submit();
+            $('#submitbutton').click(function(){
+                // disable input and button
+                submitData={
+                    txID: $('#txID').val(),
+                    shop_id:JSON.parse(localStorage.getItem("shop_id")), 
+                    items:JSON.parse(localStorage.getItem("cart_items"))
+                } 
+
+                console.log(submitData)
+                $.post('/customer/checkout/', {data:JSON.stringify(submitData)}, function(data) {
+                    console.log(data)
+                    if(data.status == 'success')
+                    {
+                        alert('Your ORDER ID: ' +  data.order_id + ' ')
+                        window.location.href= '/'
+                    }
+
+                } )
+
+
             });
-
 
         });
     </script>
