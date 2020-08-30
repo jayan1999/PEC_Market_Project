@@ -19,23 +19,24 @@
         <div class="container">
 
             <div class="jumbotron">
-                <h1 class="display-4">Order Status</h1>
+                <h1 style="color:darkslategrey;text-align:center"><strong>MY ORDERS</strong></h1>
+
                 <hr class="my-4">
                 <p class="lead">
                         <table class="table " style="background: #FFEDE9;">
                                 <thead>
                                   <tr>
                                     <th>Order ID</th>
-                                    <th>Order Status</th>
                                     <th>Order Date and Time</th>
+                                    <th>Order Status</th>
                                   </tr>
                                 </thead>
                                 <tbody>
                                     {% for order in orders %}
                                         <tr>
                                             <td>{{order.pk}}</td>
-                                            <td > {{order.status}}</td>
                                             <td>{{order.datetime}}</td>
+                                            <td > {{order.status}}</td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>

@@ -32,8 +32,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'pages.apps.PagesConfig',
-    'shops.apps.ShopsConfig',
-    'shopkeepers.apps.ShopkeepersConfig',
+    # 'shops.apps.ShopsConfig',
+    # 'shopkeepers.apps.ShopkeepersConfig',
     'accounts.apps.AccountsConfig',
     'django.contrib.admin',
     'django.contrib.auth',

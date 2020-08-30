@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib import messages, auth
 from django.contrib.auth.models import User
 from accounts.models import *
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required
-
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 # Create your views here.
 def register(request):
@@ -42,7 +43,6 @@ def register(request):
 
 def login(request):
     if request.method == 'POST':
-        print(request.POST)
         username = request.POST.get('username')
         password = request.POST.get('password')
 
@@ -86,7 +86,7 @@ def customer_dashboard(request):
 @login_required
 def customer_shops(request):
     dictV = {}
-    dictV['shops'] = Shop.objects.all().order_by('-pk')
+    dictV['shops'] = Shop.objects.all().order_by('pk')
     return render(request, 'accounts/customer_shop_list.html', dictV)
 
 @login_required
@@ -97,20 +97,55 @@ def customer_shop_details(request, pk):
     dictV['offers'] = Offer.objects.filter( shop = dictV['shop']).order_by('-pk')    
     return render(request, 'accounts/customer_shop_details.html', dictV)
 
+@csrf_exempt
 @login_required
 def customer_checkout(request):
     dictV = {}
-    if request.method == "POST":
+    if request.method == "POST" and request.POST.get('data'):
+
+        data = json.loads(request.POST.get('data'))
+        cart_items = data['items'][1:] # ignore ist one
         # get cart items
+        shop_id = data['shop_id']
         # get shop id
+        transaction_id = data['txID']
+        customer = request.user.customer
         # get customer from request.user
+        shop = Shop.objects.get(pk = shop_id)
+
+        items = []
+        total_amount = 0.0
+        for item in cart_items:
+            inventory_item = InventoryItem.objects.get(pk= item)
+            items.append(inventory_item)
+            total_amount = total_amount + inventory_item.price
+            inventory_item.availability = inventory_item.availability - 1 
+            inventory_item.save()
+
+        order = Order.objects.create(
+                customer = customer,
+                shop = shop,
+                total_price= total_amount,
+                transaction_id = transaction_id,
+                status = Order.STATUS_WAITING
+        )
         # Create Order Object
-        # For item in items
-        #       create OrderItem Object with Object = Object
-        # Update quantities in database
+
+        unique_items = list(set(cart_items))
+        for item in unique_items:
+            item_count = cart_items.count(item)
+            OrderItem.objects.create(
+                order = order,
+                item = InventoryItem.objects.get(id = item),
+                quantity = item_count
+                )
         # generate and show order id
-        print(request.POST)
+        order_id = order.id
+        dictV['order_id'] = order_id
+        dictV['status'] = 'success'
+        return JsonResponse(dictV)
     return render(request, 'accounts/customer_shop_checkout.html', dictV)
+
 
 @login_required
 def get_payment_qr_code(request, pk ):
@@ -223,9 +258,7 @@ def confirm(request,pk,pk2):
 
     STATUS_ACCEPTED = "ACCEPTED"
     req_order = Order.objects.get(pk=order_id)
-    print(req_order.status)
     req_order.status = STATUS_ACCEPTED
-    print(req_order.status)
     req_order.save()
     return redirect('/shopkeeper/orders/'+shopkeeper_id)
 
@@ -237,9 +270,7 @@ def reject(request,pk,pk2):
 
     STATUS_REJECTED = "REJECTED"
     req_order = Order.objects.get(pk=order_id)
-    print(req_order.status)
     req_order.status = STATUS_REJECTED
-    print(req_order.status)
     req_order.save()
     return redirect('/shopkeeper/orders/'+shopkeeper_id)
 
@@ -251,9 +282,7 @@ def deliver(request,pk,pk2):
 
     STATUS_DELIVERED = "DELIVERED"
     req_order = Order.objects.get(pk=order_id)
-    print(req_order.status)
     req_order.status = STATUS_DELIVERED
-    print(req_order.status)
     req_order.save()
     return redirect('/shopkeeper/orders/'+shopkeeper_id)
 

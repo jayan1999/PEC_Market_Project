@@ -19,13 +19,14 @@
         <div class="container">
 
             <div class="jumbotron">
-                <h1 class="display-4">ORDER STATUS</h1>
+                <h1 class="display-4" style="text-align:center">ORDER STATUS</h1>
                 <hr class="my-4">
                 <p class="lead">
                         <table class="table " style="background: #FFEDE9;">
                                 <thead>
                                   <tr>
                                     <th>Order ID</th>
+                                    <th>Customer Name</th>
                                     <th>Order Date and Time</th>
                                     <th>Order Status</th>
                                     <th>Transaction ID</th>
@@ -36,6 +37,7 @@
                                     {% for order in orders %}
                                         <tr>
                                             <td>{{order.pk}}</td>
+                                            <td>{{order.customer.auth_user.first_name}}</td>
                                             <td>{{order.datetime}}</td>
                                             <td> {{order.status}}</td>
                                             <td> {{order.transaction_id}}</td>

@@ -19,21 +19,24 @@
         <div class="container">
 
             <div class="jumbotron">
-                <h1 class="display-4"> {{request.user.first_name}} !</h1>
-                <hr class="my-4">
+                    <h4 class="display-4" style="text-align:center"> Last Step!</h4>
+                    <h5 style="text-align:center"> Pay, Enter the Transaction ID and Submit !</h5>
+                    <hr class="my-4">
                 <p class="lead" style="text-align:center;">
                     
                         Total Amount: ₹<b><span id="total_amount">0</span></b>
-                        Paytm QR Code:<br/><br/>
+                        <br>
+                        <strong>QR Code:</strong> <br/>
                         <img style="width:500px;height:500px;" src="" id="qr_code"/>
 
                         <form method="POST" id="form" >
                             {% csrf_token %}
-                            Transaction ID:
-                            <input id="txID" type="text" style='width:80%' name="txID" required/>
+                            <hr><hr>
+                            <label>Enter Transaction ID to proceed</label>
+                            <input id="txID" placeholder="Transaction ID" onkeyup="manage(this)" type="text" style='width:30%' name="txID" required/>
                             
                         </form>
-                        <button id="submitbutton"  class="btn btn-default">Submit</button>
+                        <button id="submitbutton" disabled class="btn btn-primary">Submit</button>
                             
                 </p>
             </div>
@@ -41,33 +44,42 @@
         
     </body>
     <script>
+            function manage(txID) {
+                var bt = document.getElementById('submitbutton');
+                if ($('#txID').val() != '') {
+                    bt.disabled = false;
+                }
+                else {
+                    bt.disabled = true;
+                }
+            } 
         $(document).ready(function(){
             $('#total_amount').html(localStorage.getItem('total_amount'));
-            a = "";
-            ar = JSON.parse(localStorage.getItem("cart_items"))
-            for(index in ar)
-            {
-               a +=  `<input style="display:none;" type="checkbox" name="cart_items" value="`+ar[index]+`">`
-            }
-            console.log(a)
-
-
             $.get('/customer/get_payment_qr_code/'+ localStorage.getItem("shop_id")+'/',
             function (data)
             {
                 console.log(data)
-
                 $('#qr_code').attr("src", data);
             }
             );
-            $('#submitbutton').click(function(e) {
-                e.preventDefault();
-                $('#form').append(a);
-
-                $('#form').submit();
+            $('#submitbutton').click(function(){
+                // disable input and button
+                
+                submitData={
+                    txID: $('#txID').val(),
+                    shop_id:JSON.parse(localStorage.getItem("shop_id")), 
+                    items:JSON.parse(localStorage.getItem("cart_items"))
+                } 
+                console.log(submitData)
+                $.post('/customer/checkout/', {data:JSON.stringify(submitData)}, function(data) {
+                    console.log(data)
+                    if(data.status == 'success')
+                    {
+                        alert('Your ORDER ID: ' +  data.order_id + ' ')
+                        window.location.href= '/'
+                    }
+                } )
             });
-
-
         });
     </script>
 </html>

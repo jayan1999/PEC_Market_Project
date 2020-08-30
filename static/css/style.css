@@ -578,11 +578,11 @@ hr {
     top: -20%;
     width: 130px;
     height: 32px;
-    background: url(../images/arrow.png);
+    /* background: url(../images/arrow.png); */
 }
 
 .step2:after {
-    background: url(../images/arrow-dotted.png);
+    /* background: url(../images/arrow-dotted.png); */
     height: 25px;
     right: -95%;
     top: -15%;
@@ -1093,7 +1093,7 @@ Steps
     top: 15%;
     width: 185px;
     height: 34px;
-    background: url(../images/arrow-big.png) no-repeat;
+    /* background: url(../images/arrow-big.png) no-repeat; */
 }
 
 .col2:after {
@@ -1103,7 +1103,7 @@ Steps
     top: 11%;
     width: 175px;
     height: 34px;
-    background: url(../images/arrow-big-dotted.png) no-repeat;
+    /* background: url(../images/arrow-big-dotted.png) no-repeat; */
 }
 
 .how-it-works-solution {
